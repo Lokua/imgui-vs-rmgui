@@ -1,5 +1,5 @@
 use iced::widget::{button, column, container, row, slider, text, Column, Row};
-use iced::{Alignment, Color, Element, Length, Theme};
+use iced::{Alignment, Border, Color, Element, Length, Theme};
 
 pub fn main() -> iced::Result {
     iced::application("Color Picker", ColorChooser::update, ColorChooser::view)
@@ -88,7 +88,7 @@ fn color_slider<'a>(
 ) -> Element<'a, Message> {
     row![
         text(label).width(Length::Fixed(50.0)),
-        slider(0..=255, value, on_change),
+        slider(0..=255, value, on_change).style(custom_slider_style),
         text(value).width(Length::Fixed(30.0))
     ]
     .spacing(6)
@@ -124,4 +124,32 @@ fn render_favorites<'a>(colors: &'a [(u8, u8, u8)]) -> Element<'a, Message> {
     }
 
     column.into()
+}
+
+fn custom_slider_style(
+    _theme: &Theme,
+    _status: slider::Status,
+) -> slider::Style {
+    slider::Style {
+        rail: slider::Rail {
+            backgrounds: (
+                // Active/filled
+                gray(200).into(),
+                // Background
+                gray(200).into(),
+            ),
+            width: 4.0,
+            border: Border::default(),
+        },
+        handle: slider::Handle {
+            shape: slider::HandleShape::Circle { radius: 7.0 },
+            background: gray(100).into(),
+            border_width: 0.0,
+            border_color: Color::TRANSPARENT,
+        },
+    }
+}
+
+fn gray(value: u8) -> Color {
+    Color::from_rgb8(value, value, value)
 }
