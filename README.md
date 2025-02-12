@@ -1,7 +1,21 @@
 # IMGUI vs RMG
 
-This repo is to guide a presentation I'm giving to my fellow frontend coworkers
-about Immediate Mode GUI (IMGUI) vs Retained Mode GUI paradigms (RMG).
+This repo is to guide an informal presentation I'm giving to my fellow frontend
+coworkers about Immediate Mode GUI (IMGUI) vs Retained Mode GUI paradigms (RMG).
+
+## Running Examples
+
+You must have rust installed on your machine. There are two separate "crates":
+egui_app (the IMGUI demo) and iced_app (the RMG demo). From the root of either
+app, run with:
+
+```sh
+cargo run --release
+```
+
+There is a also a 3rd project showcasing how one might build an IMGUI with HTML
+canvas in the ./canvas folder. You can simply open
+[./canvas/index.html](./canvas/index.html) in your browser to see this.
 
 # IMGUI
 

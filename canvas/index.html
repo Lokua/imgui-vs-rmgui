@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #ui {
+        width: 500px;
+        height: 500px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="ui"></canvas>
+    <script type="module">
+      const canvas = document.getElementById('ui')
+      canvas.width = 500
+      canvas.height = 500
+      const ctx = canvas.getContext('2d')
+      const mouse = {
+        x: 0,
+        y: 0,
+        pressed: false,
+        wasPressed: false,
+      }
+
+      ;(function render() {
+        // Clear screen
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+        // Debug mouse movement and click events
+        ctx.fillStyle = 'black'
+        ctx.font = '16px Arial'
+        ctx.textAlign = 'left'
+        ctx.fillText(`Mouse: ${mouse.x}, ${mouse.y}`, 10, 20)
+        ctx.fillText(`Pressed: ${mouse.pressed}`, 10, 40)
+
+        // Debug mouse position with red dot to validate
+        // that we're scaling correctly
+        ctx.fillStyle = 'red'
+        ctx.beginPath()
+        ctx.arc(mouse.x, mouse.y, 3, 0, Math.PI * 2)
+        ctx.fill()
+
+        if (
+          Button(
+            'Click Me',
+            canvas.width / 2 - 50,
+            canvas.height / 2 - 40,
+            100,
+            40
+          )
+        ) {
+          console.log('Booyah!')
+        }
+
+        mouse.wasPressed = mouse.pressed
+
+        // Redraw next frame
+        requestAnimationFrame(render)
+      })()
+
+      function Button(label, x, y, width, height) {
+        const isHovered =
+          mouse.x >= x &&
+          mouse.x <= x + width &&
+          mouse.y >= y &&
+          mouse.y <= y + height
+
+        ctx.fillStyle = isHovered ? 'blue' : 'darkblue'
+        ctx.fillRect(x, y, width, height)
+
+        // Configure text rendering for crisp appearance
+        ctx.fillStyle = 'white'
+        ctx.font = '16px Arial'
+        ctx.textBaseline = 'middle'
+        ctx.textAlign = 'center'
+
+        // Enable text anti-aliasing (???)
+        ctx.imageSmoothingEnabled = true
+        ctx.imageSmoothingQuality = 'high'
+
+        // Draw centered text
+        const textX = x + width / 2
+        const textY = y + height / 2
+        ctx.fillText(label, textX, textY)
+
+        return isHovered && mouse.pressed && !mouse.wasPressed
+
+        // To have click be defined as "on mouse release", do:
+        // return isHovered && !mouse.pressed && mouse.wasPressed
+      }
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect()
+        const scaleX = canvas.width / rect.width
+        const scaleY = canvas.height / rect.height
+        mouse.x = e.offsetX * scaleX
+        mouse.y = e.offsetY * scaleY
+      })
+      canvas.addEventListener('mousedown', () => {
+        mouse.pressed = true
+      })
+      canvas.addEventListener('mouseup', () => {
+        mouse.pressed = false
+      })
+    </script>
+  </body>
+</html>
